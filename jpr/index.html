@@ -1,0 +1,199 @@
+<title>UNSGR 数据库案例</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column (72ch) for prose; screenshots break out to a wider 1100px frame; a left rule marks the thesis blocks, echoing the site's own info-box style. */
+:root{
+  --bg:#f7f8fa; --paper:#ffffff; --fg:#17202b; --muted:#5b6673; --line:#d9dee5;
+  --accent:#1f3a63; --accent-ink:#ffffff; --tint:#e9eef6; --ok:#1d7a5a; --warn:#b26a00;
+  --display:"Noto Serif SC","Songti SC","SimSun",serif;
+  --body:"IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --paper:#161d26; --fg:#e6eaef; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#8fb0e0; --accent-ink:#0f141b; --tint:#1c2736; --ok:#5fc39a; --warn:#e0a84a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --paper:#161d26; --fg:#e6eaef; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#8fb0e0; --accent-ink:#0f141b; --tint:#1c2736; --ok:#5fc39a; --warn:#e0a84a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.25;margin:0}
+h2{font-size:1.6rem;margin-block:0 .6em}
+h3{font-size:1.1rem;margin-block:0 .4em}
+p{margin:0 0 1em}
+.wrap{max-width:72ch;margin-inline:auto}
+.wide{max-width:1100px;margin-inline:auto}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:40px}
+header.top .name{font-weight:600}
+header.top nav{display:flex;gap:18px;font-size:.9rem;flex-wrap:wrap}
+header.top nav a{color:var(--muted);text-decoration:none}
+header.top nav a:hover,header.top nav a:focus-visible{color:var(--accent)}
+
+.hero h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin-block:.3em .5em}
+.hero .lede{font-size:1.1rem;max-width:62ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 24px;margin-block:26px;padding-block:18px;border-block:1px solid var(--line)}
+.meta div{min-width:0}
+.meta dt{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:0;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-block:8px 0}
+.stat{background:var(--paper);border:1px solid var(--line);padding:14px 16px;min-width:0}
+.stat b{display:block;font-family:var(--display);font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+
+section{margin-block:56px 0}
+.callout{border-left:3px solid var(--accent);background:var(--paper);padding:18px 22px;margin-block:14px 22px}
+.callout p:last-child{margin-bottom:0}
+.steps{display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.steps .k{font-family:var(--mono);font-size:.85rem;color:var(--accent);padding-top:.25em}
+.steps li>div{min-width:0}
+.flow{font-family:var(--mono);font-size:.82rem;background:var(--tint);padding:14px 16px;overflow-x:auto;white-space:nowrap;margin-block:10px 0}
+
+figure{margin:0 0 36px}
+figure img{display:block;width:100%;max-width:100%;border:1px solid var(--line);background:var(--paper)}
+figcaption{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;padding-block:10px;font-size:.92rem;color:var(--muted);max-width:72ch}
+figcaption .k{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);padding-top:.25em}
+figcaption b{color:var(--fg);font-weight:600}
+.gallery h2{margin-bottom:20px}
+
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+.tscroll{overflow-x:auto}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.two>div{min-width:0}
+ul.plain{padding-left:1.2em;margin:0 0 1em}
+.limit li{margin-bottom:.4em}
+.access{background:var(--tint);padding:20px 22px}
+.access code{font-family:var(--mono);font-size:.9em}
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){a{transition:color .15s}}
+</style>
+
+<div class="wide">
+<header class="top">
+  <div class="name">张恺伦 · 作品集</div>
+  <nav><a href="#problem">问题</a><a href="#method">方案</a><a href="#screens">页面</a><a href="#metrics">指标</a><a href="#role">角色</a><a href="#access">访问</a></nav>
+</header>
+</div>
+
+<div class="wrap hero">
+  <div class="eyebrow">案例 01 · 数据产品 · 2026.07 – 2026.09</div>
+  <h1>联合国秘书长报告数据库（UNSGR）</h1>
+  <p class="lede">把 1994–2025 年 2,933 份秘书长报告，连同授权它们的决议、它们要履行的报告义务、以及报告之后安理会的回应，做成一个每个值都能回溯到原句的关系数据库，并以查询网站、CSV 和只读 API 发布。</p>
+  <dl class="meta">
+    <div><dt>给谁做</dt><dd>北京大学国际关系学者（两人研究团队）</dd></div>
+    <div><dt>我的角色</dt><dd>技术方 · 唯一工程实现者 · 共同第一作者</dd></div>
+    <div><dt>交付</dt><dd>PostgreSQL 数据库、查询网站、CSV/Parquet、只读 JSON API、代码本</dd></div>
+    <div><dt>状态</dt><dd>v1.0.0-rc10 · 数据论文投稿中 · 评审期不公开</dd></div>
+  </dl>
+  <div class="stats">
+    <div class="stat"><b class="num">2,933</b><span>秘书长报告</span></div>
+    <div class="stat"><b class="num">9,700+</b><span>整合文书</span></div>
+    <div class="stat"><b class="num">927</b><span>报告义务</span></div>
+    <div class="stat"><b class="num">≥0.97</b><span>主要字段精确率</span></div>
+  </div>
+</div>
+
+<section class="wrap" id="problem">
+  <div class="eyebrow">问题</div>
+  <h2>安理会每次行动前都先读秘书长报告，但"谁要求的、何时该交、交了之后怎样"从来没被记录成数据</h2>
+  <p>国际关系学者要回答的问题是：安理会对秘书长报告有没有回应、回应到什么程度。做不了，有三个原因。</p>
+  <ol class="steps">
+    <li><span class="k">一</span><div><b>义务不写在报告封面上。</b>决议是 15 国逐句谈出来的固定格式，好表格化；报告是各特派团自己写、格式没人规定。一份报告是哪条决议要求的、该什么时候交，只能从外部文书反推。</div></li>
+    <li><span class="k">二</span><div><b>读不过来。</b>30 年 2,933 份报告和相关决议散在 6 个官方来源，部分年份缺失，此前只能逐份人工阅读、无法系统比较。</div></li>
+    <li><span class="k">三</span><div><b>"回应程度"需要一套指标。</b>不是简单的有或没有：要有基线，才能说一次"没回应"是结果还是缺失值。</div></li>
+  </ol>
+</section>
+
+<section class="wrap" id="method">
+  <div class="eyebrow">方案</div>
+  <h2>先把研究问题翻成指标，再让规则、模型、人各做自己最值钱的那一步</h2>
+  <h3>1 · 定义问题</h3>
+  <p>把"授权 — 报告 — 回应"定义成三类指标、21 个核心变量，逐条和合作者确认口径。回应程度按报告后 90 天内安理会的最高产出分五档（决议 / 主席声明 / 新闻声明 / 仅开会 / 无），再和报告在授权周期中位置对应的制度默认值比较，偏离默认值才算回应多或少。</p>
+  <h3>2 · 分工：规则先行，模型交叉预标，人工只裁分歧</h3>
+  <div class="callout">
+    <p>合作方是非技术背景的领域专家，没有精力做全字段人工标注；直接用 AI 的结果又不可复现、过不了同行评审。所以：确定性规则只从报告开头段抽报告级字段，版本化、可回归；两家厂商的大模型只做"提议者和第二读者"，输出验证后才入库；人工只裁决模型之间有分歧的地方。先用 5 份报告双人试标定规则，沉淀 12 条编码规则，验收阈值事先锁定。</p>
+  </div>
+  <h3>3 · 管线与数据模型</h3>
+  <div class="flow">年度报告表 + UN 数字图书馆列全集 → 决议/主席声明/新闻声明/表决记录同一解析器 → 规则层抽报告级字段 → 从决议操作段抽 927 条报告义务 → 2,521 条链接把报告匹配到义务 → 模型提议 + 验证入库 → 网站 + 只读 API + Dataverse 发布</div>
+  <p style="margin-top:12px">数据库分三层 schema：观察到的（core）/ 外部导入（external）/ 派生研究（research），research 层由脚本从 core 重建；主键用自然键（UN 文号、ISO 码、特派团缩写）。每个抽取字段带证据三件套：原句、位置、方法。空值分三类——来源没说、规则没够到、规则拒绝了位置不对的线索——都不等于"事实不存在"。</p>
+</section>
+
+<section class="wide gallery" id="screens">
+  <div class="wrap"><div class="eyebrow">页面</div><h2>网站怎么用</h2></div>
+  <figure><img src="img/home.jpg" alt="UNSGR 首页：定位语与八个规模数字" loading="lazy"><figcaption><span class="k">首页</span><div><b>定位一句话：每个结构化值都能回溯到一句 UN 原文或官方登记。</b>下方是数据规模：2,933 份报告、187,847 段、1,938 份决议、927 条报告义务、900 个授权期、27,973 条国别投票。</div></figcaption></figure>
+  <figure><img src="img/response.jpg" alt="安理会回应页：按年堆叠的五档回应分布" loading="lazy"><figcaption><span class="k">安理会回应</span><div><b>核心研究问题的直接可视化。</b>每份报告之后 90 天内安理会做了什么，按年堆叠成五档；右侧按议题汇总。页面标明这是"观察到的序列，不是因果归因"。</div></figcaption></figure>
+  <figure><img src="img/obligations.jpg" alt="报告义务与履行页：每条义务的到期日点阵" loading="lazy"><figcaption><span class="k">报告义务</span><div><b>指标设计落到页面上。</b>从决议条款"每 90 天报告一次"算出每个到期日，点阵标出准时、迟交、缺报（窗口 −45 / +120 天）；新义务接管后旧义务停止计算。</div></figcaption></figure>
+  <figure><img src="img/summary.jpg" alt="报告详情摘要：每个值标来源表，附数据可用性标记" loading="lazy"><figcaption><span class="k">报告详情</span><div><b>不猜，留空并说明。</b>每个值旁标来源表；"未落在任何义务的到期窗口"直接写出三种可能；底部的数据可用性标记列出这份报告哪些层有、哪些层没有。</div></figcaption></figure>
+  <figure><img src="img/quality.jpg" alt="数据质量页：证据覆盖、抽取方法分布、关键字段缺失率" loading="lazy"><figcaption><span class="k">数据质量</span><div><b>验证数字公开。</b>六张核心表缺证据 0 行；抽取方法按表列出——规则占绝大多数，模型只进义务表 127 行，人工 1 行；关键字段缺失率逐一给出，40% 的"报告期未抽到"也照写。</div></figcaption></figure>
+  <figure><img src="img/docs.jpg" alt="文档页：只读 JSON API 说明与发布包清单" loading="lazy"><figcaption><span class="k">文档与 API</span><div><b>交付形态。</b>只读 JSON API（密钥认证、分页、RFC 7807 错误）与发布包：CSV + Parquet、代码本、质量报告、编译报告、MANIFEST 哈希、CITATION 与 LICENSES。</div></figcaption></figure>
+  <div class="wrap"><p style="color:var(--muted);font-size:.92rem">另有议题时间轴、文书关系网络、建议与呼吁统计、授权续期、安理会投票等页面，面试时可现场演示。</p></div>
+</section>
+
+<section class="wrap" id="metrics">
+  <div class="eyebrow">指标与验证</div>
+  <h2>规则冻结、密封集只打一次分、数字公开后不改</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>项目</th><th>结果</th><th>怎么验的</th></tr></thead>
+    <tbody>
+      <tr><td>报告级字段精确率</td><td class="num">0.971 – 1.000</td><td>密封测试集 44 份报告；金标准每字段 33–43 条，模型预标后人工逐句核验</td></tr>
+      <tr><td>报告级字段召回率</td><td class="num">0.90 – 1.00</td><td>同上；规则取 precision-first，覆盖缺口在数据质量页逐年公开</td></tr>
+      <tr><td>授权期末日</td><td class="num">20 / 20 一致</td><td>与安理会官方授权表逐条对照</td></tr>
+      <tr><td>国别投票</td><td class="num">27,973 条逐票一致</td><td>与会议记录（SPV）对照</td></tr>
+      <tr><td>模型与规则层一致率</td><td class="num">81.0% → 86.7%</td><td>开发集 → 留出集；分歧归类裁决一次，把报告义务链接从 3,617 提高到 3,885</td></tr>
+      <tr><td>人工编码工作量</td><td class="num">约 2 周 → 约 1 天</td><td>人工从全量标注变为只裁分歧</td></tr>
+      <tr><td>最重的全表查询</td><td class="num">分钟级 → 约 1 秒</td><td>物化特征表 + 全文检索调优</td></tr>
+      <tr><td>首个可用版本</td><td class="num">2 天</td><td>从全量抓取到可查询；此后按投刊标准收敛</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="wrap" id="role">
+  <div class="two">
+    <div>
+      <div class="eyebrow">我的角色</div>
+      <h2>两人团队的技术方</h2>
+      <p>合作方负责"问什么"：定研究问题、给领域判断、裁决分歧、写理论章节。我负责"怎么让答案可复现"：把研究问题翻成数据模型、变量和代码本；抓取与抽取管线；模型预标与验证设计；网站与 API；范围管理。论文的数据与验证章节由我主写。编码规则是两个人一起定的。</p>
+      <p>以 Claude Code 为工程搭档，三周独立交付；AWS + Docker 部署 FastAPI 与 React/TypeScript；API 密钥认证与行级安全同导出共用一个谓词。</p>
+    </div>
+    <div>
+      <div class="eyebrow">范围管理</div>
+      <h2>按投刊标准收敛，而不是随需求漂移</h2>
+      <p>项目要同时过期刊评审、供合作方使用，需求持续膨胀：议题名录方案复杂度超出核心目标，1.1 版承诺了 4 项尚不存在的功能，合作方一次提出 6 项修改建议。</p>
+      <p>我定了一条取舍标准——主体是报告与上下游文书，管线必须可复现——据此叫停复杂方案，砍掉 4 项承诺转为局限说明，6 项建议按必做 / 已做 / 不必分级回复取得共识；3 个第三方数据集经许可证确认后才导入。</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">局限</div>
+  <h2>论文里自己写明的</h2>
+  <ul class="plain limit">
+    <li>金标准是模型预标后人工核验，不是盲标，精确率可能偏乐观；下一步做一轮盲标审计并扩大金标准。</li>
+    <li>规则取 precision-first，覆盖有缺口：报告期只抽到约 60%，前序报告约 43%；计划对缺口字段加第二套规则。</li>
+    <li>90 天回应窗口在并行授权的议题上偏宽松，可能把别的流程的产出算成回应；1.1 版用决议引用关系做校验。</li>
+    <li>内容层只有词典规则，没有语义编码；建议与呼吁的对象属于研究层派生表，不是核心数据。</li>
+  </ul>
+</section>
+
+<section class="wrap" id="access">
+  <div class="eyebrow">访问</div>
+  <div class="access">
+    <p><b>站点在数据论文评审期内不公开</b>，需要账号访问。面试或交流时可提供只读演示账号，现场演示任意议题的报告链、义务履行点阵与 API 调用。</p>
+    <p>方法说明与架构（不含数据）：<span class="k">GitHub README · 链接待上线</span>。引用格式：<code>UNSGR: UN Secretary-General Reports, 1994–2025. v1.0.0-rc10. Harvard Dataverse（DOI 待分配）</code>。本项目非联合国官方产品。</p>
+  </div>
+</section>
+
+<div class="wide"><footer>
+  <span>张恺伦 · 数据分析师 · 指标体系与 AI 应用 · 上海</span>
+  <span>kaylanz@163.com</span>
+</footer></div>
