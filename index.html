@@ -1,0 +1,79 @@
+<title>张恺伦作品集</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 72ch column; three case entries as a vertical list, each a plain row (eyebrow / title / one-line claim / three numbers), no card chrome. */
+:root{
+  --bg:#f7f8fa; --paper:#ffffff; --fg:#17202b; --muted:#5b6673; --line:#d9dee5;
+  --accent:#1f3a63; --tint:#e9eef6;
+  --display:"Noto Serif SC","Songti SC","SimSun",serif;
+  --body:"IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f141b;--paper:#161d26;--fg:#e6eaef;--muted:#9aa6b3;--line:#2a3542;--accent:#8fb0e0;--tint:#1c2736;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f141b;--paper:#161d26;--fg:#e6eaef;--muted:#9aa6b3;--line:#2a3542;--accent:#8fb0e0;--tint:#1c2736;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent)}
+h1,h2{font-family:var(--display);text-wrap:balance;line-height:1.25;margin:0}
+.wrap{max-width:72ch;margin-inline:auto}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+header.top{padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:48px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+header.top .name{font-weight:600}
+header.top span.c{color:var(--muted);font-size:.9rem}
+.hero h1{font-size:clamp(1.8rem,4.5vw,2.6rem);margin-block:.3em .5em}
+.hero p{font-size:1.05rem;max-width:62ch;margin:0 0 1em}
+.hero .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hero .tags span{font-family:var(--mono);font-size:.78rem;background:var(--tint);padding:3px 10px}
+.cases{list-style:none;margin:56px 0 0;padding:0;display:grid;gap:0}
+.case{padding-block:28px;border-top:1px solid var(--line);display:grid;gap:8px}
+.case:last-child{border-bottom:1px solid var(--line)}
+.case h2{font-size:1.35rem}
+.case h2 a{text-decoration:none;color:inherit}
+.case h2 a:hover,.case h2 a:focus-visible{color:var(--accent);text-decoration:underline}
+.case p{margin:0;max-width:62ch}
+.nums{display:flex;gap:22px;flex-wrap:wrap;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+.nums b{color:var(--fg);font-weight:600}
+.soon{color:var(--muted)}
+.soon h2{color:var(--muted)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="name">张恺伦 · 作品集</div>
+  <span class="c">数据分析师 · 指标体系与 AI 应用 · 上海</span>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">Portfolio · 2024 – 2026</div>
+  <h1>把管理层看不见的东西，做成可计算、可回溯的指标</h1>
+  <p>三个 0→1 的数据产品案例：一个给国际关系学者的研究数据库，一个给研发中心管理层的指标平台，一个三周跑通最小闭环的创业站点。每个案例按"问题 → 方案 → 证据 → 我的角色"写，数字都能回到来源。</p>
+  <div class="tags"><span>指标体系</span><span>数据平台</span><span>SQL / Python</span><span>AI 评测与 Agent 工具</span><span>跨部门口径对齐</span></div>
+</div>
+
+<ol class="cases">
+  <li class="case">
+    <div class="eyebrow">案例 01 · 数据产品 · 北京大学 · 2026.7 – 2026.9</div>
+    <h2><a href="jpr/">联合国秘书长报告数据库（UNSGR）</a></h2>
+    <p>把 30 年 2,933 份报告与安理会的授权、义务、回应做成每个值都能回溯原句的关系数据库；规则先行、两家模型交叉预标、人工只裁分歧；以网站、CSV 与只读 API 发布。</p>
+    <div class="nums"><span><b>9,700+</b> 文书</span><span><b>927</b> 报告义务</span><span><b>≥0.97</b> 主要字段精确率</span><span><b>2 天</b> 首个可用版本</span></div>
+  </li>
+  <li class="case">
+    <div class="eyebrow">案例 02 · 指标体系与数据平台 · 华为英国研发中心 · 2024.2 – 2025.12</div>
+    <h2><a href="huawei/">研发指标体系与数据平台</a></h2>
+    <p>把"项目能否按期交付、要不要调人"从双周例会后的人工 Excel，变成按三类角色分层、每个数字能点回原始任务的平台；核心是用变更记录重建历史，而不是信任当前状态。</p>
+    <div class="nums"><span><b>4</b> 研发方向</span><span><b>70+</b> 迭代</span><span><b>1,300+</b> 任务记录</span><span><b>≈120×</b> 统计效率</span></div>
+  </li>
+  <li class="case soon">
+    <div class="eyebrow">案例 03 · 从零到首个 B 端验证 · 领寻 · 2026.3 – 2026.7</div>
+    <h2>AI for Science 培训站点与首个企业需求验证</h2>
+    <p>三周用 AI 工具独立搭站上线，小红书一周涨粉 100+，完成一家化工国企研发部门的需求访谈并交付培训计划书。案例页整理中。</p>
+  </li>
+</ol>
+
+<footer>
+  <span>联系：kaylanz@163.com</span>
+  <span>Kailun Zhang · kailun-z.github.io</span>
+</footer>
+</div>
