@@ -1,0 +1,307 @@
+<title>研发指标平台案例</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: same system as the UNSGR case: 72ch reading column, 1100px frame for diagrams and tables; left rule marks thesis blocks. No screenshots: two hand-drawn SVGs carry the mechanism. */
+:root{
+  --bg:#f7f8fa; --paper:#ffffff; --fg:#17202b; --muted:#5b6673; --line:#d9dee5;
+  --accent:#1f3a63; --accent-ink:#ffffff; --tint:#e9eef6; --ok:#1d7a5a; --warn:#b26a00; --hi:#c0392b;
+  --display:"Noto Serif SC","Songti SC","SimSun",serif;
+  --body:"IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --paper:#161d26; --fg:#e6eaef; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#8fb0e0; --accent-ink:#0f141b; --tint:#1c2736; --ok:#5fc39a; --warn:#e0a84a; --hi:#e8826f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --paper:#161d26; --fg:#e6eaef; --muted:#9aa6b3; --line:#2a3542;
+  --accent:#8fb0e0; --accent-ink:#0f141b; --tint:#1c2736; --ok:#5fc39a; --warn:#e0a84a; --hi:#e8826f; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.7;padding-inline:16px;padding-block:0 64px}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.25;margin:0}
+h2{font-size:1.6rem;margin-block:0 .6em}
+h3{font-size:1.1rem;margin-block:0 .4em}
+p{margin:0 0 1em}
+.wrap{max-width:72ch;margin-inline:auto}
+.wide{max-width:1100px;margin-inline:auto}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+header.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:40px}
+header.top .name{font-weight:600}
+header.top nav{display:flex;gap:18px;font-size:.9rem;flex-wrap:wrap}
+header.top nav a{color:var(--muted);text-decoration:none}
+header.top nav a:hover,header.top nav a:focus-visible{color:var(--accent)}
+
+.hero h1{font-size:clamp(1.9rem,4.5vw,2.8rem);margin-block:.3em .5em}
+.hero .lede{font-size:1.1rem;max-width:62ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 24px;margin-block:26px;padding-block:18px;border-block:1px solid var(--line)}
+.meta div{min-width:0}
+.meta dt{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:0;font-weight:500}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-block:8px 0}
+.stat{background:var(--paper);border:1px solid var(--line);padding:14px 16px;min-width:0}
+.stat b{display:block;font-family:var(--display);font-size:1.7rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:.85rem}
+
+section{margin-block:56px 0}
+.callout{border-left:3px solid var(--accent);background:var(--paper);padding:18px 22px;margin-block:14px 22px}
+.callout p:last-child{margin-bottom:0}
+.steps{display:grid;gap:14px;margin:0;padding:0;list-style:none}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.steps .k{font-family:var(--mono);font-size:.85rem;color:var(--accent);padding-top:.25em}
+.steps li>div{min-width:0}
+
+figure{margin:0 0 36px}
+figure svg{display:block;width:100%;max-width:100%;height:auto;background:var(--paper);border:1px solid var(--line)}
+figcaption{padding-block:10px;font-size:.92rem;color:var(--muted);max-width:72ch}
+figcaption b{color:var(--fg);font-weight:600}
+.dia{font-family:var(--body)}
+
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+.tscroll{overflow-x:auto}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td code,p code{font-family:var(--mono);font-size:.88em;background:var(--tint);padding:1px 5px}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.two>div{min-width:0}
+ul.plain{padding-left:1.2em;margin:0 0 1em}
+.limit li{margin-bottom:.4em}
+.access{background:var(--tint);padding:20px 22px}
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wide">
+<header class="top">
+  <div class="name">张恺伦 · 作品集</div>
+  <nav><a href="#problem">问题</a><a href="#method">方案</a><a href="#arch">架构</a><a href="#metrics">口径</a><a href="#quality">质量</a><a href="#role">角色</a></nav>
+</header>
+</div>
+
+<div class="wrap hero">
+  <div class="eyebrow">案例 02 · 指标体系与数据平台 · 2024.2 – 2025.12</div>
+  <h1>研发指标体系与数据平台</h1>
+  <p class="lede">给华为英国研发中心的研究所所长、COO、项目经理和三个研发组主管，把"项目能不能按里程碑交付、要不要调人和预算"从双周例会后的人工 Excel，变成一个有独立网址、按三类角色分层、每个数字能点回原始任务的数据平台。</p>
+  <dl class="meta">
+    <div><dt>简历对应条目</dt><dd>华为技术研发（英国）· 数据分析工程师 · 研发指标平台负责人</dd></div>
+    <div><dt>给谁做</dt><dd>华为英国研发中心：研究所所长 / COO、项目经理、3 个研发项目组主管与成员</dd></div>
+    <div><dt>我的角色</dt><dd>唯一数据负责人：口径定义、相关方对齐、管道与后端开发、上线推广；后期带 3 人小组</dd></div>
+    <div><dt>展示方式</dt><dd>公司内部系统，不公开截图；本页为描述型案例，架构与口径为抽象表述</dd></div>
+  </dl>
+  <div class="stats">
+    <div class="stat"><b class="num">4</b><span>研发方向</span></div>
+    <div class="stat"><b class="num">70+</b><span>迭代周期（sprint）</span></div>
+    <div class="stat"><b class="num">1,300+</b><span>任务记录</span></div>
+    <div class="stat"><b class="num">≈120×</b><span>例行统计效率</span></div>
+  </div>
+</div>
+
+<section class="wrap" id="problem">
+  <div class="eyebrow">问题</div>
+  <h2>主管判断不了项目能否按期交付，数据每两周靠人工算一次，常出错、查不到来源</h2>
+  <ol class="steps">
+    <li><span class="k">一</span><div><b>决策滞后。</b>所长和 COO 要在双周例会后才拿到人工整理的数字，发现延期或人力缺口时已经晚了。</div></li>
+    <li><span class="k">二</span><div><b>人工统计贵且不可信。</b>每组每次从两个平台下载数据、导进三张模板 Excel 计算、再回填项目管理网站，耗时数小时，经常出错，也查不到某个数来自哪条记录。</div></li>
+    <li><span class="k">三</span><div><b>口径不统一。</b>三个组对迭代周期和任务的用法各不相同，"完成率""延期"没有一套所有人认可的定义，数字之间无法比较，也没人愿意为"没干完"被看见。</div></li>
+  </ol>
+</section>
+
+<section class="wrap" id="method">
+  <div class="eyebrow">方案</div>
+  <h2>口径先行、评审通过再开发；用变更记录重建历史，而不是信任当前状态</h2>
+  <h3>1 · 驻进研发团队定口径</h3>
+  <p>梳理项目 / 迭代周期 / 任务三层的业务逻辑，把"完成率、跨期延期、基于历史效率的交付预测"定义成可计算的公式，拉通项目主管、team leader 和成员逐一评审，全部通过后才开发。上线一次过，没有返工。</p>
+  <h3>2 · 技术核心：从"当前状态"重建"历史"</h3>
+  <div class="callout">
+    <p>项目管理系统只记任务现在在哪个迭代；任务被挪走后，上一个迭代的指标就被污染了。平台不用当前字段，而是拉取任务的变更记录，重建每个任务的历史归属链（如 Sprint N → Backlog → Sprint N+1），再把承诺 / 新增 / 跨期流转这些口径固化进可重复运行、可回归验证的管道。</p>
+  </div>
+  <h3>3 · 按三类角色分层展示</h3>
+  <p>所长 / COO 看项目完成度与人力预算缺口；主管看团队效率与延期风险；成员看个人迭代产出。汇总数字可下钻到该迭代的任务明细和导出表。</p>
+</section>
+
+<section class="wide" id="arch">
+  <div class="wrap"><div class="eyebrow">架构</div><h2>一次完整运行怎么走</h2></div>
+  <figure>
+    <svg viewBox="0 0 1100 400" role="img" aria-label="数据从项目管理系统 API 流入抓取脚本，经指标计算层写入文档型数据库与按日快照，由 FastAPI 提供给三层网页与导出；黄金样本回归在计算层旁做校验。" class="dia">
+      <defs>
+        <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-width="1.4">
+        <rect x="30" y="120" width="170" height="86" rx="4"/>
+        <rect x="260" y="120" width="170" height="86" rx="4"/>
+        <rect x="490" y="120" width="170" height="86" rx="4"/>
+        <rect x="720" y="120" width="150" height="86" rx="4"/>
+        <rect x="930" y="60" width="150" height="60" rx="4"/>
+        <rect x="930" y="150" width="150" height="60" rx="4"/>
+        <rect x="930" y="240" width="150" height="60" rx="4"/>
+        <rect x="490" y="260" width="170" height="70" rx="4" stroke-dasharray="5 4"/>
+        <rect x="260" y="260" width="170" height="70" rx="4" stroke-dasharray="5 4"/>
+      </g>
+      <g fill="currentColor" font-size="13" text-anchor="middle">
+        <text x="115" y="152" font-weight="600">项目管理系统</text>
+        <text x="115" y="172">REST API</text>
+        <text x="115" y="192" font-size="11" opacity=".7">项目 / 迭代 / 任务 / 变更记录</text>
+        <text x="345" y="152" font-weight="600">抓取与清洗</text>
+        <text x="345" y="172">Python 管道</text>
+        <text x="345" y="192" font-size="11" opacity=".7">分页拉取 · 关联迭代</text>
+        <text x="575" y="152" font-weight="600">指标计算层</text>
+        <text x="575" y="172">重建历史归属 → 指标</text>
+        <text x="575" y="192" font-size="11" opacity=".7">承诺 / 新增 / 流转 / 人效</text>
+        <text x="795" y="152" font-weight="600">服务层</text>
+        <text x="795" y="172">FastAPI</text>
+        <text x="795" y="192" font-size="11" opacity=".7">汇总 · 明细 · 导出</text>
+        <text x="1005" y="85" font-weight="600">高层视图</text>
+        <text x="1005" y="104" font-size="11" opacity=".7">完成度 · 人力缺口</text>
+        <text x="1005" y="175" font-weight="600">主管视图</text>
+        <text x="1005" y="194" font-size="11" opacity=".7">效率 · 延期预警</text>
+        <text x="1005" y="265" font-weight="600">成员视图</text>
+        <text x="1005" y="284" font-size="11" opacity=".7">个人产出 · 任务明细</text>
+        <text x="345" y="288" font-weight="600">文档型数据库</text>
+        <text x="345" y="308" font-size="11" opacity=".7">最新结果 + 按日快照</text>
+        <text x="575" y="288" font-weight="600">黄金样本回归</text>
+        <text x="575" y="308" font-size="11" opacity=".7">固定 1 项目 + 1 迭代，改前改后必须一致</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.4" fill="none" marker-end="url(#arw)">
+        <line x1="200" y1="163" x2="258" y2="163"/>
+        <line x1="430" y1="163" x2="488" y2="163"/>
+        <line x1="660" y1="163" x2="718" y2="163"/>
+        <line x1="870" y1="150" x2="928" y2="95"/>
+        <line x1="870" y1="163" x2="928" y2="180"/>
+        <line x1="870" y1="178" x2="928" y2="265"/>
+        <line x1="575" y1="206" x2="575" y2="258"/>
+        <line x1="490" y1="206" x2="400" y2="258"/>
+      </g>
+      <g stroke="currentColor" stroke-width="1.4" fill="none" marker-end="url(#arw)">
+        <line x1="430" y1="295" x2="720" y2="206" stroke-dasharray="3 3" opacity=".6"/>
+      </g>
+      <g fill="currentColor" font-size="11" opacity=".75">
+        <text x="229" y="150" text-anchor="middle">拉取</text>
+        <text x="459" y="150" text-anchor="middle">清洗后</text>
+        <text x="689" y="150" text-anchor="middle">指标</text>
+        <text x="592" y="238" text-anchor="start">校验</text>
+        <text x="428" y="238" text-anchor="start">写入</text>
+        <text x="610" y="248" text-anchor="start">读快照</text>
+      </g>
+      <g fill="currentColor" font-size="11" opacity=".7">
+        <text x="30" y="360">容器化部署：数据库、数据处理、API、前端分容器运行 · 管道耗时 5 分 30 秒 → 1 分 06 秒</text>
+      </g>
+    </svg>
+    <figcaption><b>从项目管理系统到三层网页的一次运行。</b>核心在中间：先用变更记录重建每个任务的历史迭代归属，再算指标；每次运行按日期存快照，黄金样本在旁边做回归，改代码前后关键指标必须一致。</figcaption>
+  </figure>
+</section>
+
+<section class="wide" id="metrics">
+  <div class="wrap"><div class="eyebrow">口径</div><h2>最花功夫的一层：把"完成率""延期"定义成所有人都认的公式</h2></div>
+  <figure>
+    <svg viewBox="0 0 1100 230" role="img" aria-label="一个迭代周期的时间轴：开始前 3 天到开始后 2 天为承诺窗口，开始后 2 天到结束后 1 天为中途新增窗口。" class="dia">
+      <defs>
+        <marker id="arw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+      </defs>
+      <g stroke="currentColor" stroke-width="1.4" fill="none">
+        <line x1="60" y1="130" x2="1040" y2="130" marker-end="url(#arw2)"/>
+        <line x1="200" y1="90" x2="200" y2="170"/>
+        <line x1="900" y1="90" x2="900" y2="170"/>
+      </g>
+      <g fill="currentColor" font-size="12" text-anchor="middle">
+        <text x="200" y="80" font-weight="600">迭代开始</text>
+        <text x="900" y="80" font-weight="600">迭代结束</text>
+        <text x="550" y="195" opacity=".7">迭代周期（通常两周）</text>
+      </g>
+      <g>
+        <rect x="140" y="100" width="130" height="24" fill="currentColor" opacity=".18"/>
+        <rect x="270" y="136" width="680" height="24" fill="currentColor" opacity=".10"/>
+      </g>
+      <g fill="currentColor" font-size="12">
+        <text x="205" y="117" text-anchor="middle" font-weight="600">承诺窗口</text>
+        <text x="610" y="153" text-anchor="middle" font-weight="600">中途新增窗口</text>
+      </g>
+      <g fill="currentColor" font-size="11" opacity=".75" text-anchor="middle">
+        <text x="140" y="45">开始前 3 天</text>
+        <text x="270" y="45">开始后 2 天</text>
+        <text x="950" y="45">结束后 1 天</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity=".5">
+        <line x1="140" y1="52" x2="140" y2="100"/>
+        <line x1="270" y1="52" x2="270" y2="136"/>
+        <line x1="950" y1="52" x2="950" y2="136"/>
+      </g>
+    </svg>
+    <figcaption><b>迭代边界不用硬边界，用时间窗口。</b>规划会后还会调整任务，所以承诺范围取开始前 3 天到开始后 2 天，中途新增取开始后 2 天到结束后 1 天，给会后调整留两天容差；归属按变更记录算，任务后来被挪走不污染历史迭代。</figcaption>
+  </figure>
+  <div class="tscroll"><table>
+    <thead><tr><th>指标</th><th>公式（分子 / 分母）</th><th>规则要点</th><th>给谁看</th></tr></thead>
+    <tbody>
+      <tr><td>承诺工作量</td><td>承诺窗口内归属该迭代的任务工作量点数之和</td><td>由变更记录判定归属，不用当前字段</td><td>高层、主管</td></tr>
+      <tr><td>中途新增工作量</td><td>新增窗口内加入的任务工作量点数之和</td><td>把"范围变了"和"没干完"分开</td><td>主管、成员</td></tr>
+      <tr><td>承诺完成率</td><td>已完成工作量 ÷ 承诺工作量</td><td>主管最在意的那个数；目标值约四分之三</td><td>高层、主管</td></tr>
+      <tr><td>最终完成率</td><td>已完成工作量 ÷（承诺 + 中途新增）</td><td>两个分母并列报告，指标公平了大家才接受</td><td>高层、主管</td></tr>
+      <tr><td>跨期流转次数</td><td>任务历史归属链中跨迭代事件数</td><td>跨期不等于延期；流转超过 2 次才预警，是否计划内留给主管判断</td><td>主管、成员</td></tr>
+      <tr><td>每人每迭代产出</td><td>已完成工作量 ÷ 等效人力</td><td>人力数据缺失时返回空值 + 警告，不硬填分母</td><td>高层、主管</td></tr>
+      <tr><td>里程碑完成率</td><td>已完成用户故事点数 ÷ 里程碑总点数</td><td>与交付预测配合看风险</td><td>高层、主管</td></tr>
+      <tr><td>交付预测</td><td>剩余工作量 ÷ 近 3 个迭代滚动人效 = 还需几个迭代</td><td>定义在指标层，对比里程碑日期给风险等级；未做成自动字段</td><td>高层、主管</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="wrap" id="quality">
+  <div class="eyebrow">数据质量与可复现</div>
+  <h2>三道防线，关键指标准确率 100%</h2>
+  <ol class="steps">
+    <li><span class="k">1</span><div><b>不信当前状态，用变更记录重建历史。</b>成员误改数据时能定位到时间点和改动前后值；历史迭代的指标不随后来的修改漂移。</div></li>
+    <li><span class="k">2</span><div><b>按日期快照，可对比可回滚。</b>每次运行把任务、迭代、指标集合按运行日期保存，最新结果与历史结果并存。</div></li>
+    <li><span class="k">3</span><div><b>黄金样本回归。</b>固定一个项目 + 一个迭代作为基线，改代码前后关键指标与导出产物必须一致；"准确率 100%"指的是这个回归，不是逐条人工核对。</div></li>
+  </ol>
+  <p>管道按阶段输出标准产物（任务明细、指标汇总、迭代目录、里程碑结果、可下载报告）。曾因上游未产出某个中间文件导致报告阶段失败，之后定了统一的产物清单作为上下游契约。</p>
+</section>
+
+<section class="wrap">
+  <div class="eyebrow">结果</div>
+  <h2>从双周事后复盘，到实时监测与事前预测</h2>
+  <div class="tscroll"><table>
+    <thead><tr><th>项目</th><th>之前</th><th>之后</th></tr></thead>
+    <tbody>
+      <tr><td>高层拿到数据</td><td>双周例会后，人工整理</td><td>打开网页即看完成度与缺口；成为实时汇报与绩效评审依据</td></tr>
+      <tr><td>主管的决策时点</td><td>例会后算两小时才知道哪里有问题</td><td>例会前就知道要讨论哪个项目、要不要调人</td></tr>
+      <tr><td>例行统计</td><td>三组每两周各数小时人工</td><td>自动化，效率提升约 120 倍</td></tr>
+      <tr><td>数字可信度</td><td>常出错、查不到来源</td><td>每个数能点回原始任务记录；主管和成员不再为"这个数对不对"争</td></tr>
+      <tr><td>管道耗时</td><td>5 分 30 秒</td><td>1 分 06 秒（−80%）</td></tr>
+    </tbody>
+  </table></div>
+  <p style="margin-top:14px">在这之前我先做了研究院层面 300+ 项目的管理看板：拉通项目经理、研发、HR、财经四方口径，定义进度 / 人力 / 财务偏差指标与橙红两级预警，上线即识别出 10+ 起项目已截止但人力预算仍在发生的异常，推广到德国研发中心。两者是两层：看板管项目组合，本平台管研发团队的执行。</p>
+</section>
+
+<section class="wrap" id="role">
+  <div class="two">
+    <div>
+      <div class="eyebrow">我的角色</div>
+      <h2>唯一数据负责人</h2>
+      <p>从口径定义、相关方对齐到后端开发上线全程自己做；后期作为项目负责人带 3 人小组，我负责指标层、后端数据开发与前端设计，并向前端提供接口。技术栈：Python 管道 + MongoDB + FastAPI，后期 Docker 化。</p>
+    </div>
+    <div>
+      <div class="eyebrow">局限与下一步</div>
+      <h2>自己先说的</h2>
+      <ul class="plain limit">
+        <li>交付预测停在指标层，没做成自动预测字段；下一步按历史人效波动给区间估计。</li>
+        <li>调度靠按需运行，不是严格实时；做法是按 updatedAt 增量拉取 + webhook 触发。</li>
+        <li>可溯源下钻到迭代明细，没接到任务 URL；明细每行有任务 id，是前端加一个下钻组件的事。</li>
+        <li>黄金样本只有一个；要做成持续验证，加对账步骤并扩到每个项目各一个。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="access">
+    <p><b>公司内部系统，不展示界面与数据。</b>本页架构与口径为抽象表述，数字取量级。面试时可就口径设计、历史重建与验证机制展开。</p>
+  </div>
+</section>
+
+<div class="wide"><footer>
+  <span>张恺伦 · 数据分析师 · 指标体系与 AI 应用 · 上海</span>
+  <span>kaylanz@163.com</span>
+</footer></div>
